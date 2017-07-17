@@ -1,0 +1,311 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Line Chart</title>
+	<script src="../static/js/chartjs/Chart.bundle.js"></script>
+	<script src="../static/js/utils.js"></script>
+{#    <link href="../static/css/minimal/minimal.css" rel="stylesheet">#}
+    <link rel="stylesheet" href="../static/css/flat/green.css">
+    <script src="../static/js/icheck/jquery.js"></script>
+    <script src="../static/js/icheck/icheck.min.js"></script>
+    <script src="../static/js/icheck/custom.min.js"></script>
+{#    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
+	<style>
+		canvas {
+				-moz-user-select: none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+    <div class="demo-list clear">
+        <ul>
+            <li>
+                <input tabindex="1" type="checkbox" name="check1" id="flat-checkbox-1" >
+                <label for="flat-checkbox-1">Checkbox 1</label>
+            </li>
+            <li>
+                <input tabindex="2" type="checkbox" name="check2" id="flat-checkbox-2">
+                <label for="flat-checkbox-2">Checkbox 2</label>
+            </li>
+        </ul>
+        <script>
+            $(document).ready(function(){
+                //var callbacks_list = $('.demo-callbacks ul');
+                $('.demo-list input').on('ifCreated ifClicked ifChanged ifChecked ifUnchecked ifDisabled ifEnabled ifDestroyed', function(event){
+                    var EventCheckbox1 = event.type.replace('if','').toLocaleLowerCase();
+                    console.log(EventCheckbox1);
+{#                    console.log(this.id + ' ' + 'is' + ' ' + event.type.replace('if','').toLowerCase());#}
+                    if(this.id === "flat-checkbox-2" || this.id === "flat-checkbox-1"){
+                        if(EventCheckbox1 === "checked") {
+                            var newColor = window.chartColors.blue;
+                            var newDataset = {
+                                label: 'Dataset ' + config.data.datasets.length,
+                                borderColor: newColor,
+                                backgroundColor: newColor,
+                                fill:false,
+                                data: [],
+                            };
+
+                            for (var index = 0; index < config.data.labels.length; ++index) {
+                                newDataset.data.push(randomScalingFactor());
+                            }
+
+                            config.data.datasets.push(newDataset);
+                            window.myLine.update();
+                        }
+                        else if(EventCheckbox1 === "unchecked"){
+                            config.data.datasets.splice(4,1);
+			                window.myLine.update();
+                        }
+                    }
+                }).iCheck({
+                  checkboxClass: 'icheckbox_flat-green',
+                  radioClass: 'iradio_flat-green',
+                  increaseArea: '20%'
+                });
+            });
+
+        </script>
+
+    </div>
+
+	<div style="width:75%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<br>
+	<br>
+	<button id="randomizeData">Randomize Data</button>
+	<button id="addDataset">Add Dataset</button>
+	<button id="removeDataset">Remove Dataset</button>
+	<button id="addData">Add Data</button>
+	<button id="removeData">Remove Data</button>
+    <button id="removeAll">Remove Data</button>
+
+
+    <script>
+
+{#        $(document).ready(function(){#}
+{#          $('input').iCheck({#}
+{#            checkboxClass: 'icheckbox_flat',#}
+{#            radioClass: 'iradio_flat',#}
+{#          });#}
+{#        });#}
+
+
+
+
+
+        var MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		var config = {
+			type: 'line',
+			data: {
+				labels: ["January", "February", "March", "April", "May", "June", "July"],
+				datasets: [{
+					label: "My First dataset",
+					borderColor: window.chartColors.red,
+					backgroundColor: window.chartColors.red,
+                    fill: false,
+					data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+				}, {
+					label: "My Second dataset",
+					borderColor: window.chartColors.blue,
+					backgroundColor: window.chartColors.blue,
+                    fill: false,
+					data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+				}, {
+					label: "My Third dataset",
+					borderColor: window.chartColors.green,
+					backgroundColor: window.chartColors.green,
+                    fill: false,
+					data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+				}, {
+					label: "My Third dataset",
+					borderColor: window.chartColors.yellow,
+					backgroundColor: window.chartColors.yellow,
+                    fill: false,
+					data: [
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor(),
+                        randomScalingFactor()
+                    ],
+				}]
+			},
+			options: {
+				responsive: true,
+				title:{
+					display:true,
+					text:"Chart.js Line Chart - Stacked Area"
+				},
+				tooltips: {
+					mode: 'index',
+				},
+				hover: {
+					mode: 'index'
+				},
+				scales: {
+					xAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'Month'
+						}
+					}],
+					yAxes: [{
+						//stacked: true,
+                        position: "right",
+                        ticks:{
+						  beginAtZero: false
+                        },
+						scaleLabel: {
+							display: true,
+							labelString: 'Value'
+						}
+					}]
+				}
+			}
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById("canvas").getContext("2d");
+			window.myLine = new Chart(ctx, config);
+		};
+
+        Chart.plugins.register({
+            afterDatasetsDraw: function(chartInstance, easing) {
+                // To only draw at the end of animation, check for easing === 1
+                var ctx = chartInstance.chart.ctx;
+                chartInstance.data.datasets.forEach(function (dataset, i) {
+                    var meta = chartInstance.getDatasetMeta(i);
+                    if (!meta.hidden) {
+                        console.log(meta.data.length);
+                        meta.data.forEach(function(element, index) {
+                            if(index === 0) {
+                                // Draw the text in black, with the specified font
+                                ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                                var fontSize = 16;
+                                var fontStyle = 'normal';
+                                var fontFamily = 'Helvetica Neue';
+                                ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                // Just naively convert to string for now
+                                var dataString = dataset.data[index].toString();
+
+                                // Make sure alignment settings are correct
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+
+                                var padding = 5;
+                                var position = element.tooltipPosition();
+                                ctx.fillText(dataString, position.x -15, position.y - (fontSize / 2) - padding);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+		document.getElementById('randomizeData').addEventListener('click', function() {
+			config.data.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return randomScalingFactor();
+				});
+
+			});
+
+			window.myLine.update();
+		});
+
+		var colorNames = Object.keys(window.chartColors);
+{#		console.log(colorNames);#}
+
+        //document.getElementById('flat-checkbox-1').addEventListener();
+
+		document.getElementById('addDataset').addEventListener('click', function() {
+			var colorName = colorNames[config.data.datasets.length % colorNames.length];
+			var newColor = window.chartColors[colorName];
+			var newDataset = {
+				label: 'Dataset ' + config.data.datasets.length,
+				borderColor: newColor,
+				backgroundColor: newColor,
+				data: [],
+			};
+
+			for (var index = 0; index < config.data.labels.length; ++index) {
+				newDataset.data.push(randomScalingFactor());
+			}
+
+			config.data.datasets.push(newDataset);
+			window.myLine.update();
+		});
+
+		document.getElementById('addData').addEventListener('click', function() {
+			if (config.data.datasets.length > 0) {
+				var month = MONTHS[config.data.labels.length % MONTHS.length];
+				config.data.labels.push(month);
+
+				config.data.datasets.forEach(function(dataset) {
+					dataset.data.push(randomScalingFactor());
+				});
+
+				window.myLine.update();
+			}
+		});
+
+		document.getElementById('removeDataset').addEventListener('click', function() {
+			config.data.datasets.splice(0, 1);
+			window.myLine.update();
+		});
+
+		document.getElementById('removeData').addEventListener('click', function() {
+			config.data.labels.splice(-1, 1); // remove the label first
+
+			config.data.datasets.forEach(function(dataset, datasetIndex) {
+				dataset.data.pop();
+			});
+
+			window.myLine.update();
+		});
+
+		document.getElementById('removeAll').addEventListener('click', function() {
+			config.data.labels.splice(-1, 1); // remove the label first
+			config.data.datasets.pop();
+			window.myLine.update();
+		});
+
+	</script>
+</body>
+
+</html>
